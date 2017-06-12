@@ -1,3 +1,4 @@
+extern crate cgmath;
 use std::io::prelude::*;
 use std::io::BufWriter;
 use std::fs::File;
@@ -15,12 +16,13 @@ fn print_file(file: &mut BufWriter<File>) {
 
     for j in (0..ny).rev() {
         for i in 0..nx {
-            let r: f32 = (i as f32)/(nx as f32);
-            let g: f32  = (j as f32)/(ny as f32);
-            let b: f32  = 0.2;
-            let ir = (255.99 * r) as i32;
-            let ig = (255.99 * g) as i32;
-            let ib = (255.99 * b) as i32;
+            let rgb = cgmath::Vector3::new(
+                (i as f32)/(nx as f32),
+                (j as f32)/(ny as f32),
+                0.2);
+            let ir = (255.99 * rgb.x) as i32;
+            let ig = (255.99 * rgb.y) as i32;
+            let ib = (255.99 * rgb.z) as i32;
             write!(file, "{} {} {}\n", ir, ig, ib).unwrap();
         }
     }
