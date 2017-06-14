@@ -31,12 +31,6 @@ pub struct Sphere {
     pub center: Vec3,
 }
 
-impl Sphere {
-    pub fn new(center: Vec3, radius: f32) -> Sphere {
-        Sphere {radius: radius, center: center}
-    }
-}
-
 pub struct Hit {
     t: f32,
     p: Vec3,
@@ -96,12 +90,10 @@ impl<'a> Hitable for &'a HitableList {
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<Hit> {
         //let temp_rec: Hit;
         let mut closest_so_far = t_max;
-        let mut hit_anything = false;
         let mut result: Option<Hit> = None;
         for obj in &self.list {
             match obj.hit(&ray, t_min, closest_so_far) {
                 Some(hit) => {
-                     hit_anything = true;
                      closest_so_far = hit.t;
                      result = Some(hit);
                 }, None => {}

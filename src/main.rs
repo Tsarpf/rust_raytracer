@@ -8,8 +8,6 @@ use cgmath::InnerSpace;
 type Vec3 = Vector3<f32>;
 
 mod util;
-use util::HitableList;
-use util::Hitable;
 
 fn main() {
     println!("Hello, world!");
@@ -20,7 +18,7 @@ fn main() {
 fn print_file(file: &mut BufWriter<File>) {
     let nx = 200;
     let ny = 100;
-    write!(file, "P3\n{} {}\n255\n", nx, ny);
+    let _ = write!(file, "P3\n{} {}\n255\n", nx, ny);
 
     let lower_left_corner = Vector3::new(-2.0, -1.0, -1.0);
     let horizontal = Vector3::new(4.0, 0.0, 0.0);
