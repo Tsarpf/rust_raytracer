@@ -64,8 +64,8 @@ impl Hitable for Sphere {
         let c = oc.dot(oc) - self.radius * self.radius;
         let discriminant = b * b - 4.0 * a * c;
         if discriminant > 0.0 {
-            let plus: f32 = (-b + (b * b - 4.0 * a * c).sqrt()) / 2.0 * a;
-            let minus: f32 = (-b - (b * b - 4.0 * a * c).sqrt()) / 2.0 * a;
+            let plus: f32 = (-b + (b * b - 4.0 * a * c).sqrt()) / (2.0 * a);
+            let minus: f32 = (-b - (b * b - 4.0 * a * c).sqrt()) / (2.0 * a);
             for temp in &[plus, minus] {
                 if temp < &t_max && temp > &t_min {
                     let point = ray.point_at(temp);
