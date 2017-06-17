@@ -47,6 +47,7 @@ fn print_file(file: &mut BufWriter<File>) {
                 col += color(&ray, &world);
             }
             col /= ns as f32;
+            col = Vec3::new(col.x.sqrt(), col.y.sqrt(), col.z.sqrt());
             let ir = (255.99 * col.x) as i32;
             let ig = (255.99 * col.y) as i32;
             let ib = (255.99 * col.z) as i32;
@@ -56,11 +57,26 @@ fn print_file(file: &mut BufWriter<File>) {
 }
 
 fn color<T: util::Hitable>(ray: &util::Ray, world: T) -> Vec3 {
-    match world.hit(ray, 0.0, std::f32::MAX) {
-        Some(hit) => 0.5 * Vec3::new(hit.normal.x + 1.0, hit.normal.y + 1.0, hit.normal.z + 1.0),
+    match world.hit(ray, 0.001, std::f32::MAX) {
+        Some(hit) => {
+            let target = hit.p + hit.normal + random_in_unit_sphere();
+            0.5 * color(&util::Ray::new(hit.p, target - hit.p), world)
+        },
         None => {
             let t = 0.5 * (ray.direction().normalize().y + 1.0);
             (1.0 - t) * Vector3::new(1.0, 1.0, 1.0) + t * Vector3::new(0.5, 0.7, 1.0)
         }
     }
+}
+fn rand_f32() -> f32 {
+    rand::random::<f32>()
+}
+
+fn random_in_unit_sphere() -> Vec3 {
+    let mut p: Vec3;
+    loop {
+        p = 2.0 * Vec3::new(rand_f32(), rand_f32(), rand_f32()) - Vec3::new(1.,1.,1.);
+        if p.magnitude2() <= 1.0 { break; }
+    }
+    p
 }
