@@ -27,25 +27,19 @@ fn print_file(file: &mut BufWriter<File>) {
     let camera = Camera::new();
 
     let world = util::HitableList {
-        list: vec![
-            Box::new(
-                util::Sphere {
-                    center: Vec3::new(0.0,0.0,-1.0),
-                    radius: 0.5
-                }
-            ),
-            Box::new(
-                util::Sphere {
-                    center: Vec3::new(0.0,-100.5,-1.0),
-                    radius: 100.0
-                }
-            )
-        ]
+        list: vec![Box::new(util::Sphere {
+                       center: Vec3::new(0.0, 0.0, -1.0),
+                       radius: 0.5,
+                   }),
+                   Box::new(util::Sphere {
+                       center: Vec3::new(0.0, -100.5, -1.0),
+                       radius: 100.0,
+                   })],
     };
 
     for j in (0..ny).rev() {
         for i in 0..nx {
-            let mut col = Vec3::new(0.,0.,0.);
+            let mut col = Vec3::new(0., 0., 0.);
             for _ in 0..ns {
                 let u: f32 = (i as f32 + rand::random::<f32>()) / (nx as f32);
                 let v: f32 = (j as f32 + rand::random::<f32>()) / (ny as f32);

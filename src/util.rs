@@ -88,7 +88,6 @@ pub struct HitableList {
 impl<'a> Hitable for &'a HitableList {
     // Would be cool to do this with a map and a filter
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<Hit> {
-        // let temp_rec: Hit;
         let mut closest_so_far = t_max;
         let mut result: Option<Hit> = None;
         for obj in &self.list {
