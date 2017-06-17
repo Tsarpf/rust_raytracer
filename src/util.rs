@@ -82,21 +82,22 @@ impl Hitable for Sphere {
 }
 
 pub struct HitableList {
-    pub list: Vec<Box<Hitable>>
+    pub list: Vec<Box<Hitable>>,
 }
 
 impl<'a> Hitable for &'a HitableList {
     // Would be cool to do this with a map and a filter
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<Hit> {
-        //let temp_rec: Hit;
+        // let temp_rec: Hit;
         let mut closest_so_far = t_max;
         let mut result: Option<Hit> = None;
         for obj in &self.list {
             match obj.hit(&ray, t_min, closest_so_far) {
                 Some(hit) => {
-                     closest_so_far = hit.t;
-                     result = Some(hit);
-                }, None => {}
+                    closest_so_far = hit.t;
+                    result = Some(hit);
+                }
+                None => {}
             }
         }
         result

@@ -63,9 +63,7 @@ fn print_file(file: &mut BufWriter<File>) {
 
 fn color<T: util::Hitable>(ray: &util::Ray, world: T) -> Vec3 {
     match world.hit(ray, 0.0, std::f32::MAX) {
-        Some(hit) => {
-            0.5 * Vec3::new(hit.normal.x + 1.0, hit.normal.y + 1.0, hit.normal.z + 1.0)
-        }
+        Some(hit) => 0.5 * Vec3::new(hit.normal.x + 1.0, hit.normal.y + 1.0, hit.normal.z + 1.0),
         None => {
             let t = 0.5 * (ray.direction().normalize().y + 1.0);
             (1.0 - t) * Vector3::new(1.0, 1.0, 1.0) + t * Vector3::new(0.5, 0.7, 1.0)
