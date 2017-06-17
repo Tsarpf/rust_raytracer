@@ -5,3 +5,4 @@ authors = ["Teemu Sarapisto <tsarpf@gmail.com>"]
 
 [dependencies]
 cgmath = "*"
+rand = "*"
