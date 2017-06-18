@@ -3,6 +3,8 @@ use cgmath::Vector3;
 use cgmath::InnerSpace;
 type Vec3 = Vector3<f32>;
 
+use materials::Material;
+
 pub struct Ray {
     origin: Vec3,
     direction: Vec3,
@@ -26,19 +28,17 @@ impl Ray {
     }
 }
 
-pub struct Sphere {
+pub struct Sphere<'a> {
     pub radius: f32,
     pub center: Vec3,
+    pub material: &'a Material
 }
 
-pub trait Material {
-    fn scatter(ray_in: &Ray, hit: &Hit, attenuation: &Vec3, scattered: &Ray) -> bool;
-}
-
-pub struct Hit {
+pub struct Hit<'a> {
     t: f32,
     pub p: Vec3,
     pub normal: Vec3,
+    pub material: &'a Material
 }
 
 pub trait Hitable {
@@ -58,8 +58,9 @@ pub trait Hitable {
 // making the position vector a function of of t we get:
 // t*t*dot(B,B) + 2*t*dot(B,A-C) + dot(A-C,A-C) - R*R = 0
 // which is a basic quadratic function with 0/1/2 roots
+
 // The roots are where the ray hits the sphere
-impl Hitable for Sphere {
+impl<'a> Hitable for Sphere<'a> {
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<Hit> {
         // center to ray origin
         let oc: Vec3 = ray.origin() - self.center;
@@ -77,6 +78,7 @@ impl Hitable for Sphere {
                         t: *temp,
                         p: point,
                         normal: (point - self.center) / self.radius,
+                        material: self.material
                     });
                 }
             }
@@ -85,11 +87,11 @@ impl Hitable for Sphere {
     }
 }
 
-pub struct HitableList {
-    pub list: Vec<Box<Hitable>>,
+pub struct HitableList<'a> {
+    pub list: Vec<&'a Hitable>,
 }
 
-impl<'a> Hitable for &'a HitableList {
+impl<'a> Hitable for HitableList<'a> {
     // Would be cool to do this with a map and a filter
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<Hit> {
         let mut closest_so_far = t_max;
