@@ -31,6 +31,10 @@ pub struct Sphere {
     pub center: Vec3,
 }
 
+pub trait Material {
+    fn scatter(ray_in: &Ray, hit: &Hit, attenuation: &Vec3, scattered: &Ray) -> bool;
+}
+
 pub struct Hit {
     t: f32,
     pub p: Vec3,
