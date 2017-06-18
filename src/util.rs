@@ -28,10 +28,10 @@ impl Ray {
     }
 }
 
-pub struct Sphere<'a> {
+pub struct Sphere {
     pub radius: f32,
     pub center: Vec3,
-    pub material: &'a Material
+    pub material: Box<Material>
 }
 
 pub struct Hit<'a> {
@@ -60,7 +60,7 @@ pub trait Hitable {
 // which is a basic quadratic function with 0/1/2 roots
 
 // The roots are where the ray hits the sphere
-impl<'a> Hitable for Sphere<'a> {
+impl Hitable for Sphere {
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<Hit> {
         // center to ray origin
         let oc: Vec3 = ray.origin() - self.center;
@@ -78,7 +78,7 @@ impl<'a> Hitable for Sphere<'a> {
                         t: *temp,
                         p: point,
                         normal: (point - self.center) / self.radius,
-                        material: self.material
+                        material: &*self.material
                     });
                 }
             }
@@ -87,11 +87,11 @@ impl<'a> Hitable for Sphere<'a> {
     }
 }
 
-pub struct HitableList<'a> {
-    pub list: Vec<&'a Hitable>,
+pub struct HitableList {
+    pub list: Vec<Box<Hitable>>,
 }
 
-impl<'a> Hitable for HitableList<'a> {
+impl Hitable for HitableList {
     // Would be cool to do this with a map and a filter
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<Hit> {
         let mut closest_so_far = t_max;
